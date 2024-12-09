@@ -8,20 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var jobListViewModel = JobListViewModel()
+    @State private var isTabShow = PageSection.lowonganKerja
+    @State private var lowonganKerjaVm = LowonganKerjaViewModel()
+    @State private var lowonganTersimpanVm = LowonganTersimpanViewModel()
     
     var body: some View {
         VStack {
             headerPage
                 .padding()
-            listJobSection
             
+            if isTabShow == .lowonganKerja {
+                LowonganKerjaView(lowonganKerjaVm: $lowonganKerjaVm, lowonganTersimpanVm: $lowonganTersimpanVm)
+            } else if isTabShow == .lowonganTersimpan {
+                LowonganTersimpanView(lowonganTersimpanVm: $lowonganTersimpanVm)
+            }
+            
+            footerPage
         }
         .onAppear {
-            Task {
-                await jobListViewModel.fetchData()
-                //print(jobListViewModel.data)
-            }
+            LowonganKerjaView(lowonganKerjaVm: $lowonganKerjaVm, lowonganTersimpanVm: $lowonganTersimpanVm)
         }
     }
 }
@@ -36,82 +41,49 @@ extension ContentView {
             Spacer()
             
             Button {
-                
+                isTabShow = .lowonganKerja
             } label: {
                 Text("Lowongan Kerja")
                     .font(.caption)
-                    .fontWeight(.semibold)
+                    .fontWeight(isTabShow == .lowonganKerja ? .semibold : .light)
             }
             .foregroundStyle(Color(.blue27))
-            
-            
             
             Divider()
                 .frame(width: 2, height: 16)
                 .background(Color(.blue27))
             
             Button {
-                
+                isTabShow = .lowonganTersimpan
             } label: {
                 Text("Lowongan Tersimpan")
                     .font(.caption)
-                    .fontWeight(.light)
+                    .fontWeight(isTabShow == .lowonganTersimpan ? .semibold : .light)
             }
             .foregroundStyle(Color(.blue27))
-            
         }
     }
     
-    private var listJobSection: some View {
-        Group {
-            if jobListViewModel.isLoading {
-                loadingState
-            } else {
-                if jobListViewModel.data.isEmpty {
-                    emptyState
-                } else {
-                    VStack(alignment: .leading) {
-                        Text("Lowongan Pekerjaan")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color(.blue27))
-                            .padding()
-                        
-                        List {
-                            ForEach(jobListViewModel.data, id: \.self) { dataJob in
-                                JobCardView(dataJob: dataJob)
-                            }
-                        }
-                        .listRowInsets(.none)
-                        .listStyle(PlainListStyle())
-                        .listRowBackground(Color(.blueD9))
-                        .padding()
-                        .padding(.top, -24)
-                    }
-                    .background(Color(.blueF5))
-                }
+    private var footerPage: some View {
+        HStack {
+            Spacer()
+            VStack {
+                Image(.klobFooter)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 100, height: 100)
+                
+                Text("Copyright © 2024 PT DAYA5 REKRUTMEN")
+                    .font(.caption2)
+                    .foregroundStyle(.white)
+                    .padding(.top, 8)
             }
+            Spacer()
         }
+        .padding(.top, 32)
+        .background(Color(.blue27))
     }
     
-    private var emptyState: some View {
-        VStack {
-            Image(systemName: "exclamationmark.triangle")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            
-            Text("No Data")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundStyle(Color(.blue27))
-        }
-    }
-    
-    private var loadingState: some View {
-        ProgressView()
-            .progressViewStyle(CircularProgressViewStyle())
-            .scaleEffect(1.5, anchor: .center)
-    }
 }
 
 #Preview {
