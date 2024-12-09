@@ -8,32 +8,38 @@
 import SwiftUI
 
 struct JobCardView: View {
+    var dataJob: Jobs
+    
     var body: some View {
         HStack(alignment: .top) {
-            Image(.example)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 50, height: 50)
+            AsyncImage(url: URL(string: dataJob.corporateLogo)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+            } placeholder: {
+                ProgressView()
+            }
+            .frame(width: 50, height: 50)
             
             VStack(alignment: .leading) {
-                Text("Staff Accounting")
+                Text(dataJob.positionName)
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundStyle(Color(.blue27))
                 
-                Text("Bank Mandiri")
+                Text(dataJob.corporateName)
                     .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundStyle(Color(.blue27))
                 
                 HStack {
-                    Text("Karyawan Tetap")
+                    Text(dataJob.status)
                         .font(.footnote)
                         .foregroundStyle(Color(.blue27))
                     
                     Spacer()
                     
-                    Text("IDR 1.000.000 - 5.000.000")
+                    Text("IDR \(dataJob.salaryFrom) - \(dataJob.salaryTo)")
                         .font(.footnote)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color(.blue27))
@@ -43,7 +49,7 @@ struct JobCardView: View {
                 }
                 
                 HStack{
-                    Text("19 days ago")
+                    Text(dataJob.postedDate ?? "")
                         .font(.footnote)
                         .foregroundStyle(Color(.blue27))
                     
@@ -60,11 +66,10 @@ struct JobCardView: View {
             }
             .padding(.leading, 6)
         }
-        //.padding()
         .background(RoundedRectangle(cornerRadius: 10).fill(.white))
     }
 }
 
-#Preview {
-    JobCardView()
-}
+//#Preview {
+//    JobCardView()
+//}

@@ -7,15 +7,9 @@
 
 import Foundation
 
-enum Status: String, Codable {
-    case karyawanKontrak = "Karyawan Kontrak"
-    case karyawanTetap = "Karyawan Tetap"
-    case magang = "Magang"
-}
-
 struct JobResponse: Decodable {
-    let jobVacancyCode, positionName, corporateID, corporateName: String
-    let status: Status
+    let jobVacancyCode, positionName, corporateId, corporateName: String
+    let status: String
     let descriptions: String
     let corporateLogo: String
     let applied: Bool?

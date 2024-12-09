@@ -9,5 +9,5 @@ import Foundation
 
 class ApiService {
     static let shared = ApiService()
-    private let baseURL = "https://test-server-klob.onrender.com/fakeJob/apple/academy"
+    let baseURL = "https://test-server-klob.onrender.com/fakeJob/apple/academy"
 }
